@@ -5,23 +5,23 @@ require('../lib/config.php');
 charge();
 
 function charge(){
-	$token = get_param('token');
-	if($token === null){
-		$res = array('status' => 400, 'type' => 'parameter', 'message' => 'token未指定');
-		response($res);
-	}
-	$amount = get_param('amount');
-	if($amount === null){
-		$res = array('status' => 400, 'type' => 'parameter', 'message' => 'amount未指定');
-		response($res);
-	}
+    $token = get_param('token');
+    if($token === null){
+        $res = array('status' => 400, 'type' => 'parameter', 'message' => 'token未指定');
+        response($res);
+    }
+    $amount = get_param('amount');
+    if($amount === null){
+        $res = array('status' => 400, 'type' => 'parameter', 'message' => 'amount未指定');
+        response($res);
+    }
     $description = get_param('description');
 
     $config = config();
-	$Payjp = new Payjp($config['api_key']);
-	$charge = $Payjp->charge($token, $amount, 'jpy', $description);
+    $Payjp = new Payjp($config['api_key']);
+    $charge = $Payjp->charge($token, $amount, 'jpy', $description);
 
-	response($charge);
+    response($charge);
 }
 
 function response($arr){
@@ -31,13 +31,13 @@ function response($arr){
         $xml->addChild($key, $value);
     }
 
-	header('Content-Type: application/xml');
-	print $xml->asXML();
-	exit;
+    header('Content-Type: application/xml');
+    print $xml->asXML();
+    exit;
 }
 
 function get_param($key){
-	if(isset($_GET[$key])) return $_GET[$key];
-	if(isset($_POST[$key])) return $_POST[$key];
-	return null;
+    if(isset($_GET[$key])) return $_GET[$key];
+    if(isset($_POST[$key])) return $_POST[$key];
+    return null;
 }
