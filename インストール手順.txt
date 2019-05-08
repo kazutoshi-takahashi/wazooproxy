@@ -1,0 +1,57 @@
+rootで実施
+
+# php関連インストール ※httpdも関連パッケージとしてインストールされる
+yum install http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+yum install --enablerepo=remi-php70 php
+yum install --enablerepo=remi-php70 php-mbstring php-xml
+
+
+# composerインストール
+curl https://getcomposer.org/installer | php
+mv -i composer.phar /usr/local/bin/composer
+
+
+# gitインストール
+yum install git
+
+
+
+# /etc/httpd/conf/httpd.conf修正
+#DocumentRoot "/var/www/html"
+DocumentRoot "/opt/payjp/wazooproxy/htdocs"
+
+
+#<Directory "/var/www/html">
+<Directory "/opt/payjp/wazooproxy/htdocs">
+
+
+
+# /etc/httpd/conf.d/php.conf修正
+#AddType text/html .php
+AddType text/html .php .html
+AddType application/x-httpd-php .php .html
+
+
+
+# ディレクトリ作成 ※とりあえずownerはapache
+mkdir /opt/payjp
+chown apache: /opt/payjp/
+chmod 777 /opt/payjp
+
+
+# gitからAPIをクローン ※自ユーザで実施
+cd /opt/payjp
+git clone https://github.com/kazutoshi-takahashi/wazooproxy.git
+
+
+# httpd起動
+sudo systemctl start httpd
+
+
+# 決済サンプル画面
+http://payjp.wazoo.jp/pay.html
+
+# 決済APIの例 ※使用済みトークンの為エラーになります
+http://payjp.wazoo.jp/charge.php?token=tok_cd2b5499e2b81adb371d1913467b&amount=15000&description=
+
+
